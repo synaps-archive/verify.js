@@ -182,6 +182,7 @@ module.exports = class SynapsClient {
         this.iframe.setAttribute('src', src);
         this.iframe.setAttribute('allow', 'microphone; camera; midi; encrypted-media;');
         this.iframe.setAttribute('allowtransparency', 'true');
+        this.iframe.setAttribute('allowfullscreen', 'true');
         this.iframe.setAttribute('frameborder', 'none');
         this.iframe.setAttribute('border', '0');
         this.iframe.setAttribute('resize', 'none');
@@ -198,6 +199,7 @@ module.exports = class SynapsClient {
         this.iframe.setAttribute('src', this._formatURL());
         this.iframe.setAttribute('allow', 'microphone; camera; midi; encrypted-media;');
         this.iframe.setAttribute('allowtransparency', 'true');
+        this.iframe.setAttribute('allowfullscreen', 'true');
         this.iframe.setAttribute('frameborder', 'none');
         this.iframe.setAttribute('border', '0');
         this.iframe.setAttribute('resize', 'none');
