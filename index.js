@@ -42,6 +42,7 @@ module.exports = class SynapsClient {
     this.tier = null;
     this.callbacks = {};
     this.isOpen = false;
+    this.alreadyInit = false
     this.styles =
       ".sdk-synaps-loader-modal{position:fixed;left:0;top:0;width:100%;height:100%;z-index:9999}.sdk-synaps-loader-embed{position:relative;left:0;top:0;width:100%;height:100%;z-index:9999}.sdk-synaps-loader-logo{background-image:url(https://storage.googleapis.com/synaps-static-assets/white-loader.svg),url(https://storage.googleapis.com/synaps-static-assets/synaps-logo-white.svg);background-size:75px,25px;background-repeat:no-repeat,no-repeat;background-position:center center,center center;background-color:rgb(0 0 0 / 50%)}.sdk-synaps-container{width:100%;height:100%;border-color:transparent;border-width:0;border-style:none;left:0;top:0;-webkit-tap-highlight-color:transparent}@media(max-width:700px){.sdk-synaps-container{width:98%}}";
     this._initStyle();
@@ -59,28 +60,31 @@ module.exports = class SynapsClient {
    */
 
   init(options) {
-    if (
-      options !== null &&
-      options !== void 0 &&
-      options.type &&
-      !["modal", "embed"].includes(options.type)
-    )
-      throw new Error('The type must be either "modal" or "embed".');
-    this.elementID =
-      options === null || options === void 0 ? void 0 : options.element_id;
-    this.colors =
-      (options === null || options === void 0 ? void 0 : options.colors) || {};
-    this.type =
-      (options === null || options === void 0 ? void 0 : options.type) ||
-      "modal";
-    this.lang =
-      (options === null || options === void 0 ? void 0 : options.lang) || "en";
-    this.tier = options === null || options === void 0 ? void 0 : options.tier;
-    this.iframe = document.createElement("iframe");
-    if (!this.elementID)
-      this.elementID = this.type === "modal" ? "synaps-btn" : "synaps-embed";
+    if (!this.alreadyInit){
+      if (
+        options !== null &&
+        options !== void 0 &&
+        options.type &&
+        !["modal", "embed"].includes(options.type)
+      )
+        throw new Error('The type must be either "modal" or "embed".');
+      this.elementID =
+        options === null || options === void 0 ? void 0 : options.element_id;
+      this.colors =
+        (options === null || options === void 0 ? void 0 : options.colors) || {};
+      this.type =
+        (options === null || options === void 0 ? void 0 : options.type) ||
+        "modal";
+      this.lang =
+        (options === null || options === void 0 ? void 0 : options.lang) || "en";
+      this.tier = options === null || options === void 0 ? void 0 : options.tier;
+      this.iframe = document.createElement("iframe");
+      if (!this.elementID)
+        this.elementID = this.type === "modal" ? "synaps-btn" : "synaps-embed";
 
-    this._initLoad();
+      this._initLoad();
+      this.alreadyInit = true
+    }
   }
   /**
    * Initialization loader
@@ -90,6 +94,7 @@ module.exports = class SynapsClient {
 
   _initLoad() {
     this[this.type === "modal" ? "_initModal" : "_initEmbed"]();
+    let eventInited = false;
     window.addEventListener("message", ({ data }) => {
       if (data.type === "ready") {
         this.loaderElement.removeChild(this.loader);
@@ -97,8 +102,10 @@ module.exports = class SynapsClient {
         if (this.type === "embed") {
           this.iframe.removeAttribute("style");
         }
-
-        this._initEvents();
+        if (!eventInited){
+          this._initEvents();
+          eventInited = true
+        }
       }
     });
   }
