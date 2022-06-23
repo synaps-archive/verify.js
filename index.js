@@ -26,12 +26,16 @@ module.exports = class SynapsClient {
    * @param {string} [sessionID] The session ID
    * @param {'individual' | 'corporate'} [service] The service
    */
-  constructor(sessionID, service) {
+  constructor(sessionID, service, url=undefined) {
     if (!sessionID || !service)
       throw new Error('"sessionID" and "service" are required.');
-    this.baseURL = "https://verify.synaps.io";
-    if (service === "corporate") {
-      this.baseURL = "https://verify-v3.synaps.io";
+     if(!url) {
+      this.baseURL = "https://verify.synaps.io";
+      if (service === "corporate") {
+        this.baseURL = "https://verify-v3.synaps.io";
+      }
+    } else {
+      this.baseURL = url
     }
     this.sessionID = sessionID;
     this.service = service;
@@ -202,7 +206,7 @@ module.exports = class SynapsClient {
     this.iframe.setAttribute("src", src);
     this.iframe.setAttribute(
       "allow",
-      "microphone; camera; midi; encrypted-media;"
+      "microphone; camera; midi; encrypted-media; usb"
     );
     this.iframe.setAttribute("allowtransparency", "true");
     this.iframe.setAttribute("allowfullscreen", "true");
@@ -224,7 +228,7 @@ module.exports = class SynapsClient {
     this.iframe.setAttribute("src", this._formatURL());
     this.iframe.setAttribute(
       "allow",
-      "microphone; camera; midi; encrypted-media;"
+      "microphone; camera; midi; encrypted-media; usb"
     );
     this.iframe.setAttribute("allowtransparency", "true");
     this.iframe.setAttribute("allowfullscreen", "true");
