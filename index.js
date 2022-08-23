@@ -47,6 +47,7 @@ module.exports = class SynapsClient {
     this.callbacks = {};
     this.isOpen = false;
     this.alreadyInit = false
+    this.finishListener = false
     this.styles =
       ".sdk-synaps-loader-modal{position:fixed;left:0;top:0;width:100%;height:100%;z-index:9999}.sdk-synaps-loader-embed{position:relative;left:0;top:0;width:100%;height:100%;z-index:9999}.sdk-synaps-loader-logo{background-image:url(https://storage.googleapis.com/synaps-static-assets/white-loader.svg),url(https://storage.googleapis.com/synaps-static-assets/synaps-logo-white.svg);background-size:75px,25px;background-repeat:no-repeat,no-repeat;background-position:center center,center center;background-color:rgb(0 0 0 / 50%)}.sdk-synaps-container{width:100%;height:100%;border-color:transparent;border-width:0;border-style:none;left:0;top:0;-webkit-tap-highlight-color:transparent}@media(max-width:700px){.sdk-synaps-container{width:98%}}";
     this._initStyle();
@@ -102,7 +103,9 @@ module.exports = class SynapsClient {
     window.addEventListener("message", ({ data }) => {
       if (data.type === "ready") {
         this.loaderElement.removeChild(this.loader);
-
+        if (this.finishListener) {
+          this.iframe.contentWindow.postMessage({ type:'synaps_finish_listened' }, '*')
+        }
         if (this.type === "embed") {
           this.iframe.removeAttribute("style");
         }
@@ -190,6 +193,10 @@ module.exports = class SynapsClient {
 
   on(type, callback) {
     this.callbacks[type] = callback;
+    if(type === 'finish') {
+      this.finishListener = true;
+      this.iframe.contentWindow.postMessage({ type:'synaps_finish_listened' }, '*');
+    }
   }
   /**
    * Open a verify UI session.
