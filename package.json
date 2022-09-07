@@ -1,6 +1,6 @@
 {
   "name": "@synaps-io/verify.js",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "main": "index.js",
   "description": "Synaps Javascript SDK",
   "author": "Riwan <riwan@synaps.io>",

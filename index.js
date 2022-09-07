@@ -18,6 +18,7 @@ module.exports = class SynapsClient {
    * @property {string} [element_id] The element used for the model, or the embed
    * @property {Colors} [colors] The colors of the Verify UI
    * @property {string} [lang] The default language
+   * @property {boolean} [withFinishButton] Add finish at the end of the flow (just for the type embed)
    * @property {int} [tier] The tier
    */
 
@@ -44,6 +45,7 @@ module.exports = class SynapsClient {
     this.type = "modal";
     this.lang = "en";
     this.tier = null;
+    this.withFinishButton = false;
     this.callbacks = {};
     this.isOpen = false;
     this.alreadyInit = false
@@ -82,6 +84,7 @@ module.exports = class SynapsClient {
       this.lang =
         (options === null || options === void 0 ? void 0 : options.lang) || "en";
       this.tier = options === null || options === void 0 ? void 0 : options.tier;
+      this.withFinishButton = options === null || options === void 0 ? void 0 : options.withFinishButton;
       this.iframe = document.createElement("iframe");
       if (!this.elementID)
         this.elementID = this.type === "modal" ? "synaps-btn" : "synaps-embed";
@@ -126,6 +129,7 @@ module.exports = class SynapsClient {
     if (this.colors.primary) url += `&primary_color=${this.colors.primary}`;
     if (this.colors.secondary) url += `&secondary=${this.colors.secondary}`;
     if (this.tier) url += `&tier=${this.tier}`;
+    if (this.withFinishButton) url += `&with_finish_button=${this.withFinishButton}`;
     return url;
   }
   /**
