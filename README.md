@@ -104,7 +104,16 @@ On completed onboarding, Synaps will trigger a callback.
     Synaps.on('finish', () =>  {
     	// Do something
     });
+**With Finish Button**
+If your SDK is type "embed" you need to add a Finish Button to let user trigger the event 'finish':
 
+```javascript
+const Synaps =  new  SynapsClient('session_id',  'session_service');
+Synaps.init({
+    type:  "embed",
+    withFinishButton: true
+}
+```
 ## Customization
 
 ## 
